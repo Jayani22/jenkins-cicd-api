@@ -14,39 +14,84 @@ pipeline {
             }
         }
 
-        stage('Verify Environment') {
+        stage('Verify Docker') {
             steps {
-                sh 'node --version'
-                sh 'npm --version'
-                sh 'docker --version'
+                sh 'docker version'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
+                sh '''
+                docker run --rm \
+                  -v "$PWD":/app \
+                  -w /app \
+                  node:20 \
+                  npm ci
+                '''
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                sh 'npm test'
+                sh '''
+                docker run --rm \
+                  -v "$PWD":/app \
+                  -w /app \
+                  node:20 \
+                  npm test
+                '''
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build \
+                -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                '''
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                docker rm -f jenkins-api-test || true
+
+                docker run -d \
+                    --name jenkins-api-test \
+                    -p 3001:3000 \
+                    ${IMAGE_NAME}:${IMAGE_TAG}
+                '''
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                sh '''
+                sleep 10
+                curl --fail http://host.docker.internal:3001/health
+                '''
             }
         }
 
     }
 
     post {
+        always{
+            sh '''
+            docker rm -f jenkins-api-test || true
+            '''
+
+            echo 'Pipeline Finished'
+        }
+
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'CI/CD Pipeline executed successfully!'
         }
 
         failure {
-            echo 'Pipeline failed.'
-        }
-
-        always {
-            echo 'Pipeline execution finished.'
+            echo 'Pipeline execution failed.'
         }
     }
 }
