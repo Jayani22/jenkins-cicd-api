@@ -24,10 +24,10 @@ pipeline {
             steps {
                 sh '''
                 docker run --rm \
-                  -v "$PWD":/app \
-                  -w /app \
-                  node:20 \
-                  npm ci
+                --volumes-from jenkins \
+                -w /var/jenkins_home/workspace/jenkins-cicd-api \
+                node:20 \
+                npm ci
                 '''
             }
         }
@@ -36,10 +36,10 @@ pipeline {
             steps {
                 sh '''
                 docker run --rm \
-                  -v "$PWD":/app \
-                  -w /app \
-                  node:20 \
-                  npm test
+                --volumes-from jenkins \
+                -w /var/jenkins_home/workspace/jenkins-cicd-api \
+                node:20 \
+                npm test
                 '''
             }
         }
