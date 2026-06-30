@@ -160,7 +160,7 @@ jenkins-cicd-api
 Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/jenkins-cicd-api.git
+git clone https://github.com/jayani22/jenkins-cicd-api.git
 ```
 
 Move into the project directory
