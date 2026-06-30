@@ -70,7 +70,9 @@ pipeline {
             steps {
                 sh '''
                 sleep 10
-                curl --fail http://host.docker.internal:3001/health
+
+                docker exec jenkins-api-test \
+                wget -qO- http://localhost:3000/health
                 '''
             }
         }
