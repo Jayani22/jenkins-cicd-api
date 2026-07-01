@@ -38,13 +38,14 @@ This project provides practical experience with Jenkins Pipelines, Docker, autom
 # Features
 
 - Jenkins Declarative Pipeline
+- GitHub Webhook Integration
+- Automatic Pipeline Trigger on Code Push
 - Dockerized Node.js Application
 - Automated Unit Testing
 - Health Check Endpoint
 - Docker Image Build
 - Automatic Container Execution
 - Pipeline Cleanup
-- Modular Express.js Project Structure
 - Production-inspired CI/CD Workflow
 
 ---
@@ -54,10 +55,15 @@ This project provides practical experience with Jenkins Pipelines, Docker, autom
 ```text
                 Developer
                     │
-             Push Code to GitHub
+              Push Code
                     │
                     ▼
-                 Jenkins
+               GitHub Repository
+                    │
+           GitHub Webhook Trigger
+                    │
+                    ▼
+                 Jenkins Server
                     │
       ┌─────────────┼─────────────┐
       ▼             ▼             ▼
@@ -70,10 +76,10 @@ This project provides practical experience with Jenkins Pipelines, Docker, autom
           Run Docker Container
                     │
                     ▼
-           Verify Health API
+         Health Check Validation
                     │
                     ▼
-            Cleanup Resources
+             Cleanup Resources
                     │
                     ▼
           Pipeline Completed
@@ -237,6 +243,49 @@ Pipeline stages:
 - Run Docker Container
 - Health Check
 - Cleanup
+
+---
+
+# Automatic Pipeline Trigger
+
+This project supports automatic CI/CD execution using GitHub and Jenkins.
+
+Whenever code is pushed to the `main` branch:
+
+1. GitHub detects the new commit.
+2. GitHub sends a webhook notification to Jenkins.
+3. Jenkins automatically starts the pipeline.
+4. The application is built, tested, containerized, deployed, and verified.
+
+Pipeline Trigger Flow:
+
+```text
+Developer
+    │
+git push
+    │
+    ▼
+GitHub Repository
+    │
+GitHub Webhook
+    │
+    ▼
+Jenkins Pipeline
+    │
+Checkout
+    │
+Install Dependencies
+    │
+Run Tests
+    │
+Docker Build
+    │
+Deploy Container
+    │
+Health Check
+    │
+Pipeline Success
+```
 
 ---
 
