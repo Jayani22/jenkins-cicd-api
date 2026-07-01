@@ -342,6 +342,12 @@ Pipeline Success
 
 ![API](screenshots/api-home.png)
 
+---
+
+## GitHub Webhook Trigger
+
+![Webhook](screenshots/github-webhook.png)
+
 # Project Highlights
 
 - Jenkins Declarative Pipeline
